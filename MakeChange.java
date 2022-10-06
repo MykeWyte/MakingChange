@@ -48,6 +48,8 @@ public class MakeChange {
         
         for (int i = 0; i < numCalcs; i++)
         {
+            // TODO: add timing for testing
+            
             // initialize result data
             ChangeTableEntry result = null;
             
@@ -69,9 +71,8 @@ public class MakeChange {
                 result = recursiveSolve(calcNum, denoms, changeTable, MODE);
             }
             
-            // TODO: Go through linked list of table-entries, calculate total
-            // number of coins and how many of each denomination was used
-            // output to screen
+            // TODO: Go through purse and output the total number of coins 
+            // and how many of each denomination was used to screen
         }
         return;
     }
@@ -95,7 +96,7 @@ public class MakeChange {
         // value 0, bottom of recursion
         if (changeVal == 0)
         {
-            ChangeTableEntry base = new ChangeTableEntry(0, 0, 0, null);
+            ChangeTableEntry base = new ChangeTableEntry(0, 0, new int[denoms.length]);
             if (mode == 2)
             {
                 changeTable[0] = base;
@@ -125,7 +126,15 @@ public class MakeChange {
         }
         
         // create new table entry
-        ChangeTableEntry currEntry = new ChangeTableEntry(changeVal, best.getNumCoins() + 1, denoms[denomIndex], best);
+        int [] newPurse = new int [denoms.length];
+        int [] oldPurse = best.getPurse();
+        for (int i = 0; i < oldPurse.length; i++) // copy old purse and add coin
+        {
+            newPurse[i] = oldPurse[i];
+        }
+        newPurse[denomIndex]++;
+        
+        ChangeTableEntry currEntry = new ChangeTableEntry(changeVal, best.getNumCoins() + 1, newPurse);
         // memoize if necessary
         if (mode == 2)
         {
