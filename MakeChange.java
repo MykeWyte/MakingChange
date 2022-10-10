@@ -27,6 +27,8 @@ public class MakeChange {
          * MODE 2 = RECURSIVE (WITH MEMOIZATION)
          */
         final int MODE = 2;
+        String output = "";
+        
         
         // get information from command line
         
@@ -34,8 +36,10 @@ public class MakeChange {
         Scanner scnr = new Scanner(System.in);
         
         // get denomination array
+        System.out.println("Please enter the number of denominations you want to use:");
         int numDenoms = scnr.nextInt();
-        
+  
+        System.out.println("Please enter the denominations in increasing order:");
         int[] denoms = new int[numDenoms];
         for (int i = 0; i < numDenoms; i++)
         {
@@ -43,9 +47,10 @@ public class MakeChange {
         }
         
         // get change amounts to calculate
-        
+        System.out.println("Please enter the number of calculations to be done:");
         int numCalcs = scnr.nextInt();
         
+        System.out.println("Please enter the calculations:");
         for (int i = 0; i < numCalcs; i++)
         {
             // TODO: add timing for testing
@@ -64,7 +69,7 @@ public class MakeChange {
             // different modes to solve
             if (MODE == 0)
             {
-                // TODO: Write the bottom-up code
+                result = iterativeSolve(calcNum, denoms, changeTable);
             }
             else
             {
@@ -73,7 +78,20 @@ public class MakeChange {
             
             // TODO: Go through purse and output the total number of coins 
             // and how many of each denomination was used to screen
-        }
+            int[] purse = result.getPurse();
+            
+            output += (calcNum + " cents = ");
+            for (int DnomIndex = numDenoms - 1; DnomIndex >= 0; DnomIndex--)
+            {
+                if(purse[DnomIndex] == 0){
+                    continue;
+                }
+                output += (denoms[DnomIndex] + ":" + purse[DnomIndex] + " ");
+            }
+            output += "\n";
+        } 
+        System.out.println("Printing change conversion:");
+        System.out.print(output);
         return;
     }
     
@@ -111,8 +129,13 @@ public class MakeChange {
         ChangeTableEntry curr = null;
         for (int i = 0; i < denoms.length; i++)
         {
-            // make recursive call
             int solveNum = changeVal - denoms[i];
+            // checking if solveNum is negative, if so begin loop again
+            if(solveNum < 0)
+            {
+                continue;
+            }
+            // make recursive call
             curr = recursiveSolve(solveNum, denoms, changeTable, mode);
             
             // compare to find best
@@ -141,5 +164,53 @@ public class MakeChange {
             changeTable[changeVal] = currEntry;
         }
         return currEntry;
+    }
+    
+    /**
+     * @description iterator works up to the desired value by 1 in order to
+     * find the fewest coin solution
+     * @param changeVal
+     * @param denoms
+     * @param changeTable
+     */
+    private static ChangeTableEntry iterativeSolve(int changeVal, int[] denoms, ChangeTableEntry[] changeTable)
+    {
+        changeTable[0] = new ChangeTableEntry(0, 0, new int[denoms.length]);
+        for(int i = 1; i <= changeVal; i++)
+        {
+            int minCoins = Integer.MAX_VALUE;
+            int denomIndex = -1;
+            int best = -1;
+            for(int j = 0; j < denoms.length; j++)
+            {
+                int solveNum = i - denoms[i];
+                // checking if solveNum is negative, if so begin loop again
+                if(solveNum < 0)
+                {
+                    continue;
+                }
+                
+                int curr = changeTable[solveNum].getNumCoins();
+                
+                if (curr < minCoins)
+                {
+                    // update best info
+                    minCoins = curr;
+                    denomIndex = j;
+                    best = i;
+                }
+            }
+            
+            // create new table entry
+            int [] newPurse = new int [denoms.length];
+            int [] oldPurse = changeTable[best].getPurse();
+            for (int k = 0; k < oldPurse.length; k++) // copy old purse and add coin
+            {
+                newPurse[k] = oldPurse[k];
+            }
+            newPurse[denomIndex]++;
+            changeTable[i] = new ChangeTableEntry(i, changeTable[best].getNumCoins() + 1, newPurse);
+        }
+        return changeTable[changeVal];
     }
 }
