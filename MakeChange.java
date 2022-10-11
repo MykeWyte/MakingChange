@@ -3,7 +3,7 @@ package MakeChange;
 import java.util.Scanner;
 
 /**
- * This class solves the "making change problem
+ * This class solves the "making change" problem
  * 
  * @author Matthew Jacobs, Michael White
  * @version 1.0.0
@@ -26,7 +26,7 @@ public class MakeChange {
          * MODE 1 = RECURSIVE (NO MEMOIZATION)
          * MODE 2 = RECURSIVE (WITH MEMOIZATION)
          */
-        final int MODE = 2;
+        final int MODE = 0;
         String output = "";
         
         
@@ -36,10 +36,10 @@ public class MakeChange {
         Scanner scnr = new Scanner(System.in);
         
         // get denomination array
-        System.out.println("Please enter the number of denominations you want to use:");
+        //System.out.println("Please enter the number of denominations you want to use:");
         int numDenoms = scnr.nextInt();
   
-        System.out.println("Please enter the denominations in increasing order:");
+        //System.out.println("Please enter the denominations in increasing order:");
         int[] denoms = new int[numDenoms];
         for (int i = 0; i < numDenoms; i++)
         {
@@ -47,10 +47,10 @@ public class MakeChange {
         }
         
         // get change amounts to calculate
-        System.out.println("Please enter the number of calculations to be done:");
+        //System.out.println("Please enter the number of calculations to be done:");
         int numCalcs = scnr.nextInt();
         
-        System.out.println("Please enter the calculations:");
+        //System.out.println("Please enter the calculations:");
         for (int i = 0; i < numCalcs; i++)
         {
             // TODO: add timing for testing
@@ -80,17 +80,17 @@ public class MakeChange {
             // and how many of each denomination was used to screen
             int[] purse = result.getPurse();
             
-            output += (calcNum + " cents = ");
+            output += (calcNum + " cents =");
             for (int DnomIndex = numDenoms - 1; DnomIndex >= 0; DnomIndex--)
             {
                 if(purse[DnomIndex] == 0){
                     continue;
                 }
-                output += (denoms[DnomIndex] + ":" + purse[DnomIndex] + " ");
+                output += (" " + denoms[DnomIndex] + ":" + purse[DnomIndex]);
             }
             output += "\n";
         } 
-        System.out.println("Printing change conversion:");
+        //System.out.println("Printing change conversion:");
         System.out.print(output);
         return;
     }
@@ -183,7 +183,7 @@ public class MakeChange {
             int best = -1;
             for(int j = 0; j < denoms.length; j++)
             {
-                int solveNum = i - denoms[i];
+                int solveNum = i - denoms[j];
                 // checking if solveNum is negative, if so begin loop again
                 if(solveNum < 0)
                 {
@@ -197,7 +197,7 @@ public class MakeChange {
                     // update best info
                     minCoins = curr;
                     denomIndex = j;
-                    best = i;
+                    best = solveNum;
                 }
             }
             
