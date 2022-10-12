@@ -36,10 +36,10 @@ public class MakeChange {
         Scanner scnr = new Scanner(System.in);
         
         // get denomination array
-        //System.out.println("Please enter the number of denominations you want to use:");
+        System.out.println("Please enter the number of denominations you want to use:");
         int numDenoms = scnr.nextInt();
   
-        //System.out.println("Please enter the denominations in increasing order:");
+        System.out.println("Please enter the denominations in increasing order:");
         int[] denoms = new int[numDenoms];
         for (int i = 0; i < numDenoms; i++)
         {
@@ -47,10 +47,10 @@ public class MakeChange {
         }
         
         // get change amounts to calculate
-        //System.out.println("Please enter the number of calculations to be done:");
+        System.out.println("Please enter the number of calculations to be done:");
         int numCalcs = scnr.nextInt();
         
-        //System.out.println("Please enter the calculations:");
+        System.out.println("Please enter the calculations:");
         for (int i = 0; i < numCalcs; i++)
         {
             // TODO: add timing for testing
@@ -66,16 +66,22 @@ public class MakeChange {
             // reset for every problem, could be stored and resized for more efficiency on a per-problem basis
             // has 1 more index for the 0 value to break recursion
             
+            long time;
             // different modes to solve
             if (MODE == 0)
             {
+                time = System.nanoTime();
                 result = iterativeSolve(calcNum, denoms, changeTable);
+                time = System.nanoTime() - time;
             }
             else
             {
+                time = System.nanoTime();
                 result = recursiveSolve(calcNum, denoms, changeTable, MODE);
+                time = System.nanoTime() - time;
             }
             
+            System.out.println(calcNum + " : " + time);
             // TODO: Go through purse and output the total number of coins 
             // and how many of each denomination was used to screen
             int[] purse = result.getPurse();
