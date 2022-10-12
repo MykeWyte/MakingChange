@@ -16,7 +16,10 @@ import java.util.Scanner;
  * and then a list of values to make change for. It returns how many of 
  * each coin denomination is needed to reach the desired value. It can be 
  * used to do the bottom-up approach and the recursive approach with and
- * without memoization.
+ * without memoization. Each of these approaches fundamentally involves 
+ * finding which of the values one denomination less than the current value
+ * has the lowest coin count and adding one coin of the selected denomination
+ * to that group to be added to the returned group of coins
  */
 public class MakeChange {
     public static void main(String[] args) {
@@ -53,7 +56,6 @@ public class MakeChange {
         System.out.println("Please enter the calculations:");
         for (int i = 0; i < numCalcs; i++)
         {
-            // TODO: add timing for testing
             
             // initialize result data
             ChangeTableEntry result = null;
@@ -82,8 +84,8 @@ public class MakeChange {
             }
             
             System.out.println(calcNum + " : " + time);
-            // TODO: Go through purse and output the total number of coins 
-            // and how many of each denomination was used to screen
+            /* Go through purse and output the total number of coins 
+            and how many of each denomination was used to screen */
             int[] purse = result.getPurse();
             
             output += (calcNum + " cents =");
@@ -96,7 +98,6 @@ public class MakeChange {
             }
             output += "\n";
         } 
-        //System.out.println("Printing change conversion:");
         System.out.print(output);
         return;
     }
